@@ -57,11 +57,11 @@ db.once('open', () => {
 console.log("DB Status: " + show);
 
   //load clients model
-  require('./models/Clients');
+  require('./Models/Clients');
   const Client = mongoose.model('Clients');
 
   //load transact model
-  require('./models/Transaction');
+  require('./Models/Transaction');
   const Transaction = mongoose.model('Transactions');
 
   //must load transact and document models
