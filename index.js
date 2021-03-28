@@ -147,7 +147,10 @@ console.log("DB Status: " + show);
 
     return res.status(200);
   });
-
+  app.post('/deleteTransact', async(req, res) =>{
+    await Transaction.deleteOne({_id: req.body.id});
+    console.log("Removed transaction with id of: " + req.body.id);
+  });
 
 //********************CONFIG*SECTION***********************//
 
