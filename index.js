@@ -117,6 +117,19 @@ console.log("DB Status: " + show);
   });
   
   app.post('/clientDetails', async (req,res) =>{
+
+    await Client.updateOne({_id: req.body.id}
+      ,{
+        fname: req.body.fname,
+        lname: req.body.lname,
+        state: req.body.state,
+        address: req.body.address,
+        phoneNumber: req.body.phoneNumber,
+        city: req.body.city,
+        descript: req.body.descript
+      }, {upsert: true}
+    );
+    console.log("Updated client " + req.body.id);
     return res.status(200);
   });
 
