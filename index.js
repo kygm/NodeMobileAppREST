@@ -56,114 +56,130 @@ db.once('open', () => {
 
 console.log("DB Status: " + show);
 
-  //load clients model
-  require('./Models/Clients');
-  const Client = mongoose.model('Clients');
+//load clients model
+require('./Models/Clients');
+const Client = mongoose.model('Clients');
 
-  //load transact model
-  require('./Models/Transaction');
-  const Transaction = mongoose.model('Transactions');
+//load transact model
+require('./Models/Transaction');
+const Transaction = mongoose.model('Transactions');
 
-  //must load transact and document models
-  //afterwards
-
-
+//must load transact and document models
+//afterwards
 
 
-  //ROUTES
+
+
+//ROUTES
 
 
 //working, returns entire list of clients
-  app.get('/', async (req, res) => {
-      //res.clearCookie("authorized");
-      //console.log(req.cookies);
-      var clientsList;
-      clientsList = await Client.find({}).lean();
+app.get('/', async (req, res) => {
+  //res.clearCookie("authorized");
+  //console.log(req.cookies);
+  var clientsList;
+  clientsList = await Client.find({}).lean();
 
-      return res.status(200).json({'client' : clientsList});
+  return res.status(200).json({ 'client': clientsList });
 
-  });
-  //questionable
-  app.get('/getTransacts', async (req, res) => {
-    var transactList;
-    transactList = await Transaction.find({}).lean();
-    return res.status(200).json({'transaction': transactList});
-  });
+});
+//questionable
+app.get('/getTransacts', async (req, res) => {
+  var transactList;
+  transactList = await Transaction.find({}).lean();
+  return res.status(200).json({ 'transaction': transactList });
+});
 
-  app.get('/getRevenue', async (req, res) =>{
-    //in here, we need an aggregate query to return
-    //total revenue (sum of cost - sum of price)
-  });
-  //working
-  app.post('/addClient', async(req, res) =>{
+app.get('/getRevenue', async (req, res) => {
+  //in here, we need an aggregate query to return
+  //total revenue (sum of cost - sum of price)
+});
+//working
+app.post('/addClient', async (req, res) => {
 
-    const newClient =
-      {
-        fname: req.body.fname,
-        lname: req.body.lname,
-        city: req.body.city,
-        state: req.body.state,
-        address: req.body.address,
-        phoneNumber: req.body.phoneNumber,
-        descript: req.body.descript
+  const newClient =
+  {
+    fname: req.body.fname,
+    lname: req.body.lname,
+    city: req.body.city,
+    state: req.body.state,
+    address: req.body.address,
+    phoneNumber: req.body.phoneNumber,
+    descript: req.body.descript
 
-      }
-      await new Client(newClient).save();
+  }
+  await new Client(newClient).save();
 
-    console.log(req.body);
-    return res.json(
-      await Client.findOne({phoneNumber : req.body.phoneNumber})
-    );
-  });
-  
-  app.post('/clientDetails', async (req,res) =>{
+  console.log(req.body);
+  return res.json(
+    await Client.findOne({ phoneNumber: req.body.phoneNumber })
+  );
+});
 
-    await Client.updateOne({_id: req.body.id}
-      ,{
-        fname: req.body.fname,
-        lname: req.body.lname,
-        state: req.body.state,
-        address: req.body.address,
-        phoneNumber: req.body.phoneNumber,
-        city: req.body.city,
-        descript: req.body.descript
-      }, {upsert: true}
-    );
-    console.log("Updated client " + req.body.id);
-    return res.status(200);
-  });
+app.post('/clientDetails', async (req, res) => {
 
-  app.post('/addTransaction', async (req, res) =>{
-    const newTransact =
-      {
-        fname: req.body.fname,
-        lname: req.body.lname,
-        phoneNumber: req.body.phoneNumber,
-        transactDate: req.body.transactDate,
-        transactCost: req.body.transactCost,
-        transactPrice: req.body.transactPrice,
-        transactTime: req.body.transactTime,
-        descript: req.body.descript,
-        transactName: req.body.transactName
-      }
-      await new Transaction(newTransact).save();
-      console.log(req.body);
+  await Client.updateOne({ _id: req.body.id }
+    , {
+      fname: req.body.fname,
+      lname: req.body.lname,
+      state: req.body.state,
+      address: req.body.address,
+      phoneNumber: req.body.phoneNumber,
+      city: req.body.city,
+      descript: req.body.descript
+    }, { upsert: true }
+  );
+  console.log("Updated client " + req.body.id);
+  return res.status(200);
+});
 
-    return res.json(
-      await Transaction.find({lname: req.body.lname})
-    );
-  });
-  //working
-  app.post('/deleteClient', async(req,res)=>{
-    await Client.deleteOne({_id : req.body.id});
-    console.log("Removed client with id of: " + req.body.id);
+app.post('/addTransaction', async (req, res) => {
+  const newTransact =
+  {
+    fname: req.body.fname,
+    lname: req.body.lname,
+    phoneNumber: req.body.phoneNumber,
+    transactDate: req.body.transactDate,
+    transactCost: req.body.transactCost,
+    transactPrice: req.body.transactPrice,
+    transactTime: req.body.transactTime,
+    descript: req.body.descript,
+    transactName: req.body.transactName
+  }
+  await new Transaction(newTransact).save();
+  console.log(req.body);
 
-    return res.status(200);
-  });
-  app.post('/deleteTransact', async(req, res) =>{
-    await Transaction.deleteOne({_id: req.body.id});
-    console.log("Removed transaction with id of: " + req.body.id);
-  });
+  return res.json(
+    await Transaction.find({ lname: req.body.lname })
+  );
+});
+//working
+app.post('/deleteClient', async (req, res) => {
+  await Client.deleteOne({ _id: req.body.id });
+  console.log("Removed client with id of: " + req.body.id);
+
+  return res.status(200);
+});
+app.post('/deleteTransact', async (req, res) => {
+  await Transaction.deleteOne({ _id: req.body.id });
+  console.log("Removed transaction with id of: " + req.body.id);
+});
+
+app.post('/searchClient', async (req, res) => {
+  console.log(req.body.fname);
+  return res.json(
+    await Client.findOne({ fname: req.body.fname })
+  );
+});
+
+app.post('/searchTransact', async (req, res) => {
+  //console.log("doing operation");
+  return res.json(
+    await Transaction.find({ fname: req.body.fname })
+  );
+});
+
+
 
 //********************CONFIG*SECTION***********************//
 
