@@ -168,7 +168,7 @@ app.post('/deleteTransact', async (req, res) => {
 app.post('/searchClient', async (req, res) => {
   console.log(req.body.fname);
   return res.json(
-    await Client.findOne({ fname: req.body.fname })
+    await Client.find({ fname: req.body.fname })
   );
 });
 
