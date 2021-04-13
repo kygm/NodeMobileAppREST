@@ -86,7 +86,7 @@ app.get('/', async (req, res) => {
 //questionable
 app.get('/getTransacts', async (req, res) => {
   var transactList;
-  transactList = await Transaction.find({}).lean();
+  transactList = await Transaction.find({}).sort({"dateEntered":-1}).lean();
   return res.status(200).json({ 'transaction': transactList });
 });
 
